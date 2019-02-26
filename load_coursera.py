@@ -1,17 +1,18 @@
-import requests
+#import requests
 from pprint import pprint
 from faker import Faker
 from pymongo import MongoClient
 import uuid
 import random
+import json
 
 
 # constants for Coursera API
-BASE_URL = "https://api.coursera.org/api/catalog.v1/courses"
-FIELDS = 'shortName, name,language,largeIcon,photo,previewLink,shortDescription,smallIcon,subtitleLanguagesCsv,isTranslate,universityLogo,video,videoId,aboutTheCourse,targetAudience,faq,courseSyllabus,courseFormat,suggestedReadings,instructor,estimatedClassWorkload,aboutTheInstructor,sessions.fields(durationString,name,eligibleForCertificates,startDay,startMonth,startYear,active,status),instructors.fields(photo,bio,fullName,title,department,website,websiteTwitter),universities.fields(description,homeLink,location,website,websiteTwitter,logo),categories.fields(name,shortName,description)'
-INCLUDES = 'universities,categories,instructors,sessions'
-Q = 'search'
-QUERY = 'computer science'
+# BASE_URL = "https://api.coursera.org/api/catalog.v1/courses"
+#FIELDS = 'shortName, name,language,largeIcon,photo,previewLink,shortDescription,smallIcon,subtitleLanguagesCsv,isTranslate,universityLogo,video,videoId,aboutTheCourse,targetAudience,faq,courseSyllabus,courseFormat,suggestedReadings,instructor,estimatedClassWorkload,aboutTheInstructor,sessions.fields(durationString,name,eligibleForCertificates,startDay,startMonth,startYear,active,status),instructors.fields(photo,bio,fullName,title,department,website,websiteTwitter),universities.fields(description,homeLink,location,website,websiteTwitter,logo),categories.fields(name,shortName,description)'
+#INCLUDES = 'universities,categories,instructors,sessions'
+#Q = 'search'
+#QUERY = 'computer science'
 
 # MongoClient
 db = MongoClient('mongodb://localhost:27017')['course_catalog']
@@ -27,29 +28,29 @@ fake = Faker()
 
 def fetch_courses():
 
-	params = {
-		'fields': FIELDS,
-		'includes': INCLUDES,
-		#'q': Q,
-		#'query': QUERY
-	}
+	# params = {
+	# 	'fields': FIELDS,
+	# 	'includes': INCLUDES,
+	# 	#'q': Q,
+	# 	#'query': QUERY
+	# }
 
-	r = requests.get(BASE_URL, params=params)
-	print(r.url)
+	#r = requests.get(BASE_URL, params=params)
+	#print(r.url)
 
-	data = r.json()
+	#data = r.json()
 
-	courses = filter_english_courses(data['elements'])
-	universities = data['linked']['universities']
-	categories = data['linked']['categories']
-	instructors = data['linked']['instructors']
-	sessions = data['linked']['sessions']
+	#courses = filter_english_courses(data['elements'])
+	universities = university_list #data['linked']['universities']
+	#categories = data['linked']['categories']
+	#instructors = data['linked']['instructors']
+	#sessions = data['linked']['sessions']
 
 	print("Fetched: ")
-	print(str(len(courses)) + " courses")
+	#print(str(len(courses)) + " courses")
 	print(str(len(universities)) + " universities")
-	print(str(len(categories)) + " categories")
-	print(str(len(instructors)) + " instructors")
+	#print(str(len(categories)) + " categories")
+	#print(str(len(instructors)) + " instructors")
 	#print(str(len(sessions)) + " sessions")
 
 	for c in categories:
@@ -87,7 +88,7 @@ def fetch_courses():
 		new_categories = []
 		new_universities = []
 		new_instructors = []
-		
+
 		if 'categories' in course['links'].keys():
 			for category_id in course['links']['categories']:
 				category = find_by_id(categories, category_id)
@@ -163,21 +164,14 @@ def insert_mongo(docs, collection_name):
 	collection.insert(docs)
 
 if __name__ == "__main__":
-	courses, categories, universities, instructors = fetch_courses()
-	insert_mongo(courses, "course")
-	
-
-	students, courses_taken = generate_fake_students()
-	insert_mongo(students, "student")
-	insert_mongo(courses_taken, "course_taken")
+	#courses, categories, universities, instructors = fetch_courses()
+	#insert_mongo(courses, "course")
 
 
+	#students, courses_taken = generate_fake_students()
+	#insert_mongo(students, "student")
+	#insert_mongo(courses_taken, "course_taken")
+	with open('data.json') as f:
+	    data = json.load(f)
 
-
-
-
-
-
-
-
-
+	pprint(data)
