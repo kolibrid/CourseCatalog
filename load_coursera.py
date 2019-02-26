@@ -15,14 +15,14 @@ import json
 #QUERY = 'computer science'
 
 # MongoClient
-db = MongoClient('mongodb://localhost:27017')['course_catalog']
-db.drop_collection('course')
-db.drop_collection('category')
-db.drop_collection('session')
-db.drop_collection('instructor')
-db.drop_collection('university')
-db.drop_collection('student')
-db.drop_collection('course_taken')
+#db = MongoClient('mongodb://localhost:27017')['course_catalog']
+#db.drop_collection('course')
+#db.drop_collection('category')
+#db.drop_collection('session')
+#db.drop_collection('instructor')
+#db.drop_collection('university')
+#db.drop_collection('student')
+#db.drop_collection('course_taken')
 
 fake = Faker()
 
